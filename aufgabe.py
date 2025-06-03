@@ -11,4 +11,4 @@ class Aufgabe:
         return datetime.now() > self.faelligkeit
 
     def anzeigen(self):
-        return f"[{self.fach}] {self.beschreibung} - fällig bis {self.faelligkeit.strftime('%d.%m.%Y')} (Priorität {self.prioritaet})"
+        return f"{self.fach} -> {self.beschreibung} \n fällig bis {self.faelligkeit.strftime('%d.%m.%Y')} (Priorität {self.prioritaet})"
