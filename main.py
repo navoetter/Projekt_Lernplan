@@ -10,7 +10,7 @@ def main():
     plan = Lernplan()
 
     a1 = Aufgabe("Mathe", "Kurvendiskussion lernen", "30.05.2025", 1)
-    a2 = Aufgabe("Bio", "Zellaufbau zusammenfassen", "29.05.2025", 2)
+    a2 = Aufgabe("FSST", "Projekt", "29.05.2025", 2)
 
     plan.aufgabe_hinzufuegen(a1)
     plan.aufgabe_hinzufuegen(a2)
