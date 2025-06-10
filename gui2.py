@@ -86,21 +86,20 @@ class LernplanGUI:
             messagebox.showwarning("Fehler", "Priorität muss eine Zahl zwischen 1 und 3 sein")
             return
 
-        # Datum validieren und umwandeln
+        # Datum validieren
         try:
-            faelligkeit_obj = datetime.strptime(faelligkeit, "%d.%m.%Y")
-            faelligkeit_str = faelligkeit_obj.strftime("%Y-%m-%d")
+            datetime.strptime(faelligkeit, "%d.%m.%Y")
         except ValueError:
             messagebox.showwarning("Fehler", "Datum im falschen Format. Bitte TT.MM.JJJJ verwenden.")
             return
 
         # Aufgabe speichern
-        try:
-            self.db.aufgabe_speichern(fach, beschreibung, faelligkeit_str, prioritaet)
+        success = self.db.aufgabe_speichern(fach, beschreibung, faelligkeit, prioritaet)
+        if success:
             messagebox.showinfo("Erfolg", "Aufgabe gespeichert!")
             self.clear_entries()
-        except Exception as e:
-            messagebox.showerror("Fehler", f"Fehler beim Speichern: {e}")
+        else:
+            messagebox.showerror("Fehler", "Fehler beim Speichern der Aufgabe")
 
     def clear_entries(self):
         self.fach_entry.delete(0, tk.END)
@@ -110,20 +109,27 @@ class LernplanGUI:
 
     def lernplan_anzeigen(self):
         self.ausgabe.delete("1.0", tk.END)
-        try:
-            aufgaben = self.db.alle_aufgaben_laden()
-            for fach, beschreibung, faelligkeit, prioritaet in aufgaben:
-                # Datum in TT.MM.JJJJ umwandeln für Anzeige
-                try:
-                    faelligkeit_display = datetime.strptime(faelligkeit, "%Y-%m-%d").strftime("%d.%m.%Y")
-                except ValueError:
-                    faelligkeit_display = faelligkeit  # Falls unerwartetes Format
+        aufgaben = self.db.alle_aufgaben_laden()
+        
+        if not aufgaben:
+            self.ausgabe.insert(tk.END, "Keine Aufgaben vorhanden.")
+            return
+            
+        for aufgabe in aufgaben:
+            try:
+                # Da wir jetzt ein Dictionary bekommen (durch cursor(dictionary=True))
+                fach = aufgabe['fach']
+                beschreibung = aufgabe['beschreibung']
+                faelligkeit = aufgabe['faelligkeit']  # Bereits formatiert als 'TT.MM.JJJJ' durch DATE_FORMAT
+                prioritaet = aufgabe['prioritaet']
+                
                 self.ausgabe.insert(
                     tk.END,
-                    f"{faelligkeit_display} – {fach}: {beschreibung} (Priorität: {prioritaet})\n"
+                    f"{faelligkeit} – {fach}: {beschreibung} (Priorität: {prioritaet})\n"
                 )
-        except Exception as e:
-            messagebox.showerror("Fehler", f"Fehler beim Laden: {e}")
+            except Exception as e:
+                messagebox.showerror("Fehler", f"Fehler beim Anzeigen der Aufgabe: {e}")
+                continue
 
 if __name__ == "__main__":
     root = tk.Tk()
