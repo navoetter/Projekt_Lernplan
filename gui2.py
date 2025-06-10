@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from tkinter import ttk  # für coolere Widgets
+from tkinter import ttk  # für modernere Widgets
 from aufgabe import Aufgabe
 from lernplan import Lernplan
 
@@ -9,11 +9,22 @@ class LernplanGUI:
         self.root = root
         self.root.title("Lernplan Manager")
         self.root.geometry("500x600")
-        self.root.configure(bg="#975fb4")  # heller Hintergrund
+        self.root.configure(bg="#975fb4")
+
+        # Farben und Styles anpassen
+        style = ttk.Style()
+        style.theme_use("clam")  # 'clam' ist flexibler als 'default' für Farben
+
+        style.configure("TFrame", background="#975fb4")
+        style.configure("TLabel", background="#975fb4", foreground="white")
+        style.configure("TLabelframe", background="#975fb4", foreground="white")
+        style.configure("TLabelframe.Label", background="#975fb4", foreground="white")
+        style.configure("TButton", background="#7f4b99", foreground="white")
+        style.map("TButton", background=[("active", "#6b3d83")])
 
         self.plan = Lernplan()
 
-        # Hauptframe mit Padding und Rahmen
+        # Hauptframe
         main_frame = ttk.Frame(root, padding=15)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
@@ -21,31 +32,26 @@ class LernplanGUI:
         titel = ttk.Label(main_frame, text="Lernplan Manager", font=("Helvetica", 20, "bold"))
         titel.pack(pady=10)
 
-        # Eingabefelder in eigenem Rahmen
+        # Eingabefelder
         input_frame = ttk.LabelFrame(main_frame, text="Neue Aufgabe hinzufügen", padding=10)
         input_frame.pack(fill=tk.X, pady=10)
 
-        # Fach
         ttk.Label(input_frame, text="Fach:").grid(row=0, column=0, sticky=tk.W, pady=5)
         self.fach_entry = ttk.Entry(input_frame)
         self.fach_entry.grid(row=0, column=1, sticky=tk.EW, pady=5)
 
-        # Beschreibung
         ttk.Label(input_frame, text="Beschreibung:").grid(row=1, column=0, sticky=tk.W, pady=5)
         self.beschreibung_entry = ttk.Entry(input_frame)
         self.beschreibung_entry.grid(row=1, column=1, sticky=tk.EW, pady=5)
 
-        # Fälligkeitsdatum
         ttk.Label(input_frame, text="Fälligkeitsdatum (TT.MM.JJJJ):").grid(row=2, column=0, sticky=tk.W, pady=5)
         self.faelligkeit_entry = ttk.Entry(input_frame)
         self.faelligkeit_entry.grid(row=2, column=1, sticky=tk.EW, pady=5)
 
-        # Priorität
         ttk.Label(input_frame, text="Priorität (1-3):").grid(row=3, column=0, sticky=tk.W, pady=5)
         self.prioritaet_entry = ttk.Entry(input_frame)
         self.prioritaet_entry.grid(row=3, column=1, sticky=tk.EW, pady=5)
 
-        # Eingabespalten gleich breit machen
         input_frame.columnconfigure(1, weight=1)
 
         # Buttons
@@ -53,21 +59,20 @@ class LernplanGUI:
         button_frame.pack(fill=tk.X, pady=10)
 
         self.btn_add = ttk.Button(button_frame, text="Aufgabe hinzufügen", command=self.aufgabe_hinzufuegen)
-        self.btn_add.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(0,5))
+        self.btn_add.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(0, 5))
 
         self.btn_show = ttk.Button(button_frame, text="Lernplan anzeigen", command=self.lernplan_anzeigen)
-        self.btn_show.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(5,0))
+        self.btn_show.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(5, 0))
 
-        # Textfeld mit Scrollbar für Ausgabe
-        ausgabe_frame = ttk.LabelFrame(main_frame, text="Lernplan")
+        # Textfeld zur Ausgabe mit Scrollbar
+        ausgabe_frame = ttk.LabelFrame(main_frame, text="Lernplan", padding=5)
         ausgabe_frame.pack(fill=tk.BOTH, expand=True, pady=10)
 
-        self.ausgabe = tk.Text(ausgabe_frame, height=15, wrap=tk.WORD)
-        self.ausgabe.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0,5), pady=5)
+        self.ausgabe = tk.Text(ausgabe_frame, height=15, wrap=tk.WORD, bg="#f4e9f9", fg="black")
+        self.ausgabe.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 5), pady=5)
 
         scrollbar = ttk.Scrollbar(ausgabe_frame, orient=tk.VERTICAL, command=self.ausgabe.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
         self.ausgabe.config(yscrollcommand=scrollbar.set)
 
     def aufgabe_hinzufuegen(self):
