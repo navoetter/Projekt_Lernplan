@@ -10,7 +10,7 @@ class Datenbank:
                 password="",
                 database="lernplan_db"
             )
-            self.cursor = self.conn.cursor(dictionary=True)  # Damit werden Ergebnisse als Dictionary zurückgegeben
+            self.cursor = self.conn.cursor(dictionary=True)
             self.create_table()
         except mysql.connector.Error as err:
             print(f"Fehler bei der Verbindung zur Datenbank: {err}")
@@ -60,7 +60,7 @@ class Datenbank:
         try:
             self.cursor.execute("""
                 SELECT id, fach, beschreibung, 
-                       DATE_FORMAT(faelligkeit, '%%d.%%m.%%Y') AS faelligkeit, 
+                       DATE_FORMAT(faelligkeit, '%d.%m.%Y') AS faelligkeit, 
                        prioritaet
                 FROM aufgaben 
                 ORDER BY faelligkeit, prioritaet

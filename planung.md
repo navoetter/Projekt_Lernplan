@@ -1,9 +1,3 @@
-
----
-
-## **planung.md**
-
-```markdown
 # Planung – Lernplan-Manager
 
 ## Ziel
@@ -15,3 +9,4 @@ Ein Programm, mit dem man Schulaufgaben verwalten und einen Lernplan erstellen k
 27.05 Fehlerkorrektur und GUI
 03.06 Neue GUI
 10.06 Korrektur der GUI und Datenbank
+13.06 Korrektur der Datenbankübertragung 
